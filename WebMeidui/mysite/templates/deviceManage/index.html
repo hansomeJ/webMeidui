@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-4.4.1-dist/css/bootstrap.css' %}">
+    <script type="text/javascript" src="{% static 'bootstrap-4.4.1-dist/js/jQuery3.2.1/jQuery-3.4.1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-4.4.1-dist/js/bootstrap.js' %}"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">菜单栏</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="dropdown ml-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="selectEquipment" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                选择串口
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">com1</a>
+                <a class="dropdown-item" href="#">com2</a>
+                <a class="dropdown-item" href="#">com3</a>
+                <a class="dropdown-item" href="#">com4</a>
+            </div>
+        </div>
+        <div class="dropdown ml-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="setBoto" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                设置波特率
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">110</a>
+                <a class="dropdown-item" href="#">300</a>
+                <a class="dropdown-item" href="#">600</a>
+                <a class="dropdown-item" href="#">1200</a>
+                <a class="dropdown-item" href="#">2400</a>
+                <a class="dropdown-item" href="#">4800</a>
+                <a class="dropdown-item" href="#">9600</a>
+                <a class="dropdown-item" href="#">14400</a>
+                <a class="dropdown-item" href="#">19200</a>
+                <a class="dropdown-item" href="#">38400</a>
+                <a class="dropdown-item" href="#">56000</a>
+                <a class="dropdown-item" href="#">57600</a>
+                <a class="dropdown-item" href="#">115200</a>
+                <a class="dropdown-item" href="#">128000</a>
+                <a class="dropdown-item" href="#">256000</a>
+            </div>
+        </div>
+        <div>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#exampleModal">
+                选择设备
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">选择设备</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{% url 'deviceManage:index' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                {% for d in device %}
+                                <div class="checkbox">
+                                    <label><input type="checkbox" value="{{d.id}}" name="{{ d.name }}">{{ d.name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <input type="submit" class="btn btn-primary" value="提交">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form class="form-inline my-2 my-lg-0 ml-5">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<div class="container my-2">
+    {% for device in devices %}
+    <div class="card float-left ml-3 mr-3 mt-4" style="width: 15rem;">
+        <h5 class="card-title ml-3 my-2 device" id="{{device.id}}">{{device.name}}</h5>
+        <form>
+            <fieldset disabled>
+                <div class="form-group row">
+                    <label for="Time" class="col-sm-3 col-form-label col-form-label-sm ml-2">时间</label>
+                    <div class="col-lg-7">
+                        <input type="text" id="Time" class="form-control form-control-sm" placeholder="接收数据时间">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Time" class="col-sm-3 col-form-label col-form-label-sm ml-2">电压</label>
+                    <div class="col-lg-5">
+                        <input type="text" id="voltage" class="form-control form-control-sm" placeholder="电压">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Time" class="col-sm-3 col-form-label ml-2">温度</label>
+                    <div class="col-lg-5">
+                        <input type="text" id="temperature" class="form-control form-control-sm" placeholder="温度">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <div class="card-body">
+            <a href="#" class="card-link">查看数据</a>
+            <a href="#" class="card-link">导出数据</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="jumbotron">
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+            featured content or information.</p>
+        <hr class="my-4">
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+<script>
+    window.setInterval(function () {
+    }, 1000);
+    $(function () {
+        let $devices=$(".device")
+        $devices.each(function () {
+            ids = $(this).attr('id');
+            console.log(ids)
+        })
+    })
+</script>
+</html>
