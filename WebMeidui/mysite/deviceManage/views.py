@@ -4,6 +4,9 @@ import serial
 import time
 import threading
 from mysite.connect import Data
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST, require_http_methods, require_safe
+from django.http import JsonResponse, HttpResponse
 
 
 # device1 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
@@ -29,6 +32,19 @@ def index(request):
             except:
                 pass
         return render(request, 'deviceManage/index.html', {'device': device, 'devices': deviceList})
+
+
+@require_POST
+@csrf_exempt
+def datas(request):
+    id = request.POST.get('ids')
+    device = equipment.objects.get(pk=id)
+    equipmentData = data.objects.filter(equipment_id=device)
+    dataTime = equipmentData[0].time
+    voltage = equipmentData[0].voltage
+    temperature = equipmentData[0].temperature
+    result = {'deviceId': id, 'dataTime': dataTime, 'voltage': voltage, 'temperature': temperature, 'Success': 'ok'}
+    return JsonResponse(result)
 
 
 # 显示设备界面

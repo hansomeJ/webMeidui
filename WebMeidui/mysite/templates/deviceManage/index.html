@@ -72,7 +72,8 @@
                             <div class="modal-body">
                                 {% for d in device %}
                                 <div class="checkbox">
-                                    <label><input type="checkbox" value="{{d.id}}" name="{{ d.name }}">{{ d.name }}</label>
+                                    <label><input type="checkbox" value="{{d.id}}"
+                                                  name="{{ d.name }}">{{d.name}}</label>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -96,25 +97,25 @@
 <div class="container my-2">
     {% for device in devices %}
     <div class="card float-left ml-3 mr-3 mt-4" style="width: 15rem;">
-        <h5 class="card-title ml-3 my-2 device" id="{{device.id}}">{{device.name}}</h5>
-        <form>
+        <h5 class="card-title ml-3 my-2">{{device.name}}</h5>
+        <form class="device" id="{{device.id}}">
             <fieldset disabled>
                 <div class="form-group row">
-                    <label for="Time" class="col-sm-3 col-form-label col-form-label-sm ml-2">时间</label>
+                    <label class="col-sm-3 col-form-label col-form-label-sm ml-2">时间</label>
                     <div class="col-lg-7">
-                        <input type="text" id="Time" class="form-control form-control-sm" placeholder="接收数据时间">
+                        <input type="text" class="form-control form-control-sm time" value="" placeholder="接收数据时间">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="Time" class="col-sm-3 col-form-label col-form-label-sm ml-2">电压</label>
+                    <label class="col-sm-3 col-form-label col-form-label-sm ml-2">电压</label>
                     <div class="col-lg-5">
-                        <input type="text" id="voltage" class="form-control form-control-sm" placeholder="电压">
+                        <input type="text" class="form-control form-control-sm voltage" value="" placeholder="电压">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="Time" class="col-sm-3 col-form-label ml-2">温度</label>
+                    <label class="col-sm-3 col-form-label ml-2">温度</label>
                     <div class="col-lg-5">
-                        <input type="text" id="temperature" class="form-control form-control-sm" placeholder="温度">
+                        <input type="text" class="form-control form-control-sm temperature" value="" placeholder="温度">
                     </div>
                 </div>
             </fieldset>
@@ -139,13 +140,29 @@
 </body>
 <script>
     window.setInterval(function () {
-    }, 1000);
-    $(function () {
-        let $devices=$(".device")
-        $devices.each(function () {
-            ids = $(this).attr('id');
-            console.log(ids)
+        $(function () {
+            let $devices = $(".device");
+            $devices.each(function () {
+                $ids = $(this).attr('id');
+                // console.log($ids);
+                $.ajax({
+                    url: '{% url "deviceManage:datas"  %}',
+                    data: {'ids': $ids},
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            $('#' + data.deviceId + ' ' + '.time').attr("value", data.dataTime);
+                            $('#' + data.deviceId + ' ' + '.voltage').attr("value", data.voltage);
+                            $('#' + data.deviceId + ' ' + '.temperature').attr("value", data.temperature);
+                        }
+                    }
+                })
+
+            })
         })
-    })
+    }, 1000);
+
 </script>
 </html>
