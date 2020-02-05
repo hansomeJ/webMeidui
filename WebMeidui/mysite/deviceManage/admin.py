@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import data, equipment
+from .models import data, equipment,equipmentAttr
 
 
 class dataAdmin(admin.ModelAdmin):
@@ -16,3 +16,9 @@ class equipmentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(equipment, equipmentAdmin)
+
+class equipmentAttrAdmin(admin.ModelAdmin):
+    list_display = ['id', 'equipment_com', 'equipment_rate', ]
+
+
+admin.site.register(equipmentAttr, equipmentAttrAdmin)

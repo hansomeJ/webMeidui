@@ -12,7 +12,6 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    123
     <a class="navbar-brand" href="#">菜单栏</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="dropdown ml-2">
@@ -21,10 +20,10 @@
                 选择串口
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">com1</a>
-                <a class="dropdown-item" href="#">com2</a>
-                <a class="dropdown-item" href="#">com3</a>
-                <a class="dropdown-item" href="#">com4</a>
+                <a class="dropdown-item com">com1</a>
+                <a class="dropdown-item com">com2</a>
+                <a class="dropdown-item com">com3</a>
+                <a class="dropdown-item com">com4</a>
             </div>
         </div>
         <div class="dropdown ml-2">
@@ -33,21 +32,21 @@
                 设置波特率
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">110</a>
-                <a class="dropdown-item" href="#">300</a>
-                <a class="dropdown-item" href="#">600</a>
-                <a class="dropdown-item" href="#">1200</a>
-                <a class="dropdown-item" href="#">2400</a>
-                <a class="dropdown-item" href="#">4800</a>
-                <a class="dropdown-item" href="#">9600</a>
-                <a class="dropdown-item" href="#">14400</a>
-                <a class="dropdown-item" href="#">19200</a>
-                <a class="dropdown-item" href="#">38400</a>
-                <a class="dropdown-item" href="#">56000</a>
-                <a class="dropdown-item" href="#">57600</a>
-                <a class="dropdown-item" href="#">115200</a>
-                <a class="dropdown-item" href="#">128000</a>
-                <a class="dropdown-item" href="#">256000</a>
+                <a class="dropdown-item rate">110</a>
+                <a class="dropdown-item rate">300</a>
+                <a class="dropdown-item rate">600</a>
+                <a class="dropdown-item rate">1200</a>
+                <a class="dropdown-item rate">2400</a>
+                <a class="dropdown-item rate">4800</a>
+                <a class="dropdown-item rate">9600</a>
+                <a class="dropdown-item rate">14400</a>
+                <a class="dropdown-item rate">19200</a>
+                <a class="dropdown-item rate">38400</a>
+                <a class="dropdown-item rate">56000</a>
+                <a class="dropdown-item rate">57600</a>
+                <a class="dropdown-item rate">115200</a>
+                <a class="dropdown-item rate">128000</a>
+                <a class="dropdown-item rate">256000</a>
             </div>
         </div>
         <div>
@@ -88,8 +87,12 @@
         </div>
 
         <form class="form-inline my-2 my-lg-0 ml-5">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <fieldset disabled>
+                <button class="btn btn-secondary active my-2 my-sm-0">当前串口</button>
+                <input class="form-control mr-sm-2" type="text" value="{{ eq.equipment_com }}" id="com">
+                <button class="btn btn-secondary active my-2 my-sm-0">当前波特率</button>
+                <input class="form-control mr-sm-2" type="text" value="{{ eq.equipment_rate }}" id="rate">
+            </fieldset>
         </form>
     </div>
 </nav>
@@ -97,38 +100,49 @@
 <div class="container my-2">
     {% for device in devices %}
     <div class="card float-left ml-3 mr-3 mt-4" style="width: 15rem;">
-        <h5 class="card-title ml-3 my-2">{{device.name}}</h5>
+        <h5 class="card-title my-2 text-center">{{device.name}}</h5>
+        <hr class="mt-1">
         <form class="device" id="{{device.id}}">
             <fieldset disabled>
-                <div class="form-group row">
-                    <label class="col-sm-3 col-form-label col-form-label-sm ml-2">时间</label>
-                    <div class="col-lg-7">
-                        <input type="text" class="form-control form-control-sm time" value="" placeholder="接收数据时间">
-                    </div>
-                </div>
+
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label col-form-label-sm ml-2">电压</label>
-                    <div class="col-lg-5">
+                    <div class="col-lg-8">
                         <input type="text" class="form-control form-control-sm voltage" value="" placeholder="电压">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label ml-2">温度</label>
-                    <div class="col-lg-5">
+                    <div class="col-lg-8">
                         <input type="text" class="form-control form-control-sm temperature" value="" placeholder="温度">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label col-form-label-sm ml-2">时间</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control form-control-sm time" value="" placeholder="接收数据时间">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label col-form-label-sm ml-2">状态</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control form-control-sm status" value="waitting...">
                     </div>
                 </div>
             </fieldset>
         </form>
-        <div class="card-body">
-            <a href="#" class="card-link">查看数据</a>
+        <hr class="mb-0 mt-1">
+        <div class="card-body p-1 text-center">
+            <a href="#" class="card-link">历史数据</a>
             <a href="#" class="card-link">导出数据</a>
         </div>
     </div>
+
     {% empty %}
     <div class="jumbotron">
         <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
+        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention
+            to
             featured content or information.</p>
         <hr class="my-4">
         <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
@@ -151,18 +165,59 @@
                     type: 'POST',
                     dataType: 'json',
                     success: function (data) {
-                        console.log(data);
                         if (data.Success) {
                             $('#' + data.deviceId + ' ' + '.time').attr("value", data.dataTime);
                             $('#' + data.deviceId + ' ' + '.voltage').attr("value", data.voltage);
                             $('#' + data.deviceId + ' ' + '.temperature').attr("value", data.temperature);
+                            $('#' + data.deviceId + ' ' + '.status').attr("value", data.status);
                         }
                     }
                 })
 
             })
         })
-    }, 1000);
+    }, 5000);
+    $(function () {
+        let $com = $(".com");
+        $com.on('click', function () {
+            let $value = $(this).text();
+            $.ajax({
+                url: '{% url "deviceManage:set" %}',
+                data: {'com': $value},
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.Success) {
+                        $("#com").empty().attr('value', data.com)
+                    }
+                    if (data.Error) {
+                        alert(data.Error)
+                    }
+
+                }
+            })
+        })
+    });
+    $(function () {
+        let $rate = $(".rate");
+        $rate.on('click', function () {
+            let $value = $(this).text();
+            $.ajax({
+                url: '{% url "deviceManage:set" %}',
+                data: {'rate': $value},
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.Success) {
+                        $("#rate").empty().attr('value', data.rate)
+                    }
+                    if (data.Error) {
+                        alert(data.Error)
+                    }
+                }
+            })
+        })
+    })
 
 </script>
 </html>

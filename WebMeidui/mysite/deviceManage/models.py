@@ -11,7 +11,7 @@ class equipment(models.Model):
     )
     id = models.AutoField(primary_key=True, verbose_name='设备主键')
     name = models.CharField(max_length=200, verbose_name='设备名称', null=False,
-                                      default='设备')
+                            default='设备')
     equipment_id = models.CharField(max_length=200, verbose_name='设备代码', unique=True, null=False)
     status = models.CharField(choices=STATUS_CHOISE, default='0', max_length=2, verbose_name='状态')
 
@@ -21,6 +21,19 @@ class equipment(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class equipmentAttr(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='属性主键')
+    equipment_com = models.CharField(max_length=200, default='COM1', verbose_name='设备串口', )
+    equipment_rate = models.CharField(max_length=200, default='9600', verbose_name='设备波特率', )
+
+    class Meta:
+        verbose_name = '设备属性'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.id)
 
 
 # 创建返回设备表
