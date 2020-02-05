@@ -100,7 +100,7 @@
 <div class="container my-2">
     {% for device in devices %}
     <div class="card float-left ml-3 mr-3 mt-4" style="width: 15rem;">
-        <h5 class="card-title my-2 text-center">{{device.name}}</h5>
+        <h5 class="card-title my-2 text-center" id="filename">{{device.name}}</h5>
         <hr class="mt-1">
         <form class="device" id="{{device.id}}">
             <fieldset disabled>
@@ -133,8 +133,8 @@
         </form>
         <hr class="mb-0 mt-1">
         <div class="card-body p-1 text-center">
-            <a href="#" class="card-link">历史数据</a>
-            <a href="#" class="card-link">导出数据</a>
+            <a href="{% url 'deviceManage:historyData' device.id %}" target="_blank" class="card-link btn">历史数据</a>
+            <button class="card-link btn" id="export" value="{{device.id}}">导出数据</button>
         </div>
     </div>
 
@@ -217,7 +217,57 @@
                 }
             })
         })
-    })
+    });
+    $(function () {
+        let $button = $("#export");
+        $button.on('click', function () {
+            let $id = $(this).val();
+            let $FileName = $("#filename").text();
+            $.ajax({
+                url: '{% url "deviceManage:export_excel" %}',
+                data: {'id': $id},
+                type: 'POST',
+                success: function (data) {
+                    // console.log('123');
+                    // return data
+                    const blob = new Blob([data]);
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.download = $FileName + '.xls';
+                    a.href = blobUrl;
+                    a.click();
+                    // document.body.removeChild(a);
+                }
+            })
 
+        })
+    });
+
+    function request() {
+        const req = new XMLHttpRequest();
+        req.open('POST', '{% url "deviceManage:export_excel" %}', true);
+        req.responseType = 'blob';
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.onload = function () {
+            const data = req.response;
+            const a = document.createElement('a');
+            const blob = new Blob([data]);
+            const blobUrl = window.URL.createObjectURL(blob);
+            download(blobUrl);
+        };
+        req.send('<id:' + $("#export").val() + '>');
+    }
+
+    function download(blobUrl) {
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.download = '<文件名>';
+        a.href = blobUrl;
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // request();
 </script>
 </html>

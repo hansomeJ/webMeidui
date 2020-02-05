@@ -11,35 +11,91 @@
 
 </head>
 <body>
-<table class="table table-sm table-dark">
-    <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-    </tr>
-    <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-    </tr>
-    <tr>
-        <th scope="row">3</th>
-        <td colspan="2">Larry the Bird</td>
-        <td>@twitter</td>
-    </tr>
-    </tbody>
-</table>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+        </div>
+        <div class="card text-center col-12">
+            <div class="card-header">
+                {{device.name}}历史数据
+            </div>
+            <div class="card-body">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">编号</th>
+                        <th scope="col">电压</th>
+                        <th scope="col">温度</th>
+                        <th scope="col">时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if page %}
+                    {% for data in page.object_list %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{data.voltage}}</td>
+                        <td>{{data.temperature}}</td>
+                        <td>{{data.time}}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td>还没有数据</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-muted">
+                <div class="row">
+                    <div class="col">
+
+                    </div>
+                    <nav aria-label="Page navigation example text-center col-6">
+                    <ul class="pagination text-center">
+                        {% if page.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.parms}}?page={{page.previous_page_number}}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for num in page.paginator.page_range %}
+                        {% if num == page.number %}
+                        <li class="page-item active"><a class="page-link" href="{{ page.parms }}?page={{num}}">{{num}}</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item "><a class="page-link " href="{{ page.parms }}?page={{num}}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{page.parms}}?page={{page.next_page_number}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                    <div class="col">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

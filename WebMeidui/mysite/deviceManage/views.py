@@ -6,8 +6,11 @@ import threading
 from mysite.connect import Data
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods, require_safe
-from django.http import JsonResponse, HttpResponse
-
+from django.http import JsonResponse, HttpResponse,StreamingHttpResponse
+from django.core.paginator import Paginator
+import xlwt
+from io import BytesIO,StringIO
+import codecs
 
 # device1 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
 # device2 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
@@ -16,6 +19,13 @@ from django.http import JsonResponse, HttpResponse
 # device2.start()
 
 # Create your views here.
+def my_page(data, pagenum):
+    paginator = Paginator(object_list=data, per_page=4)
+    # 生成一个page对象
+    page = paginator.page(pagenum)
+    return page
+
+
 def index(request):
     device = equipment.objects.all()
     eq = equipmentAttr.objects.all()[0]
@@ -79,8 +89,61 @@ def set(request):
             return JsonResponse({'Error': 'setting com error!'})
 
 
-# 显示设备界面
-def selectEquipment(request, id):
-    pass
+def historyData(request, id):
+    pagenum = request.GET.get('page', None)
+    device = equipment.objects.get(pk=id)
+    # 如果当前页数为None 则pagenum的值为1
+    pagenum = 1 if pagenum == None else pagenum
 
-# 数据接收界面
+    # 如果年份和月份都不为空的话就按照获取的年份与月份来查询文章
+    datas = data.objects.filter(equipment_id=device)
+
+    page = my_page(datas, pagenum)
+    return render(request, 'deviceManage/historyData.html', {'page': page, 'device': device})
+
+
+# 导出excel数据
+@require_POST
+@csrf_exempt
+def export_excel(request):
+    id = request.POST.get('id')
+    device = equipment.objects.get(pk=id)
+    datas = data.objects.filter(equipment_id=device)
+    filename = device.name + '.xls'
+    # 创建一个文件对象
+    wb = xlwt.Workbook(encoding='utf8')
+    # 创建一个sheet对象
+    sheet = wb.add_sheet(u"第一页")
+    # 写入文件标题
+    sheet.write(0, 0, u'电压')
+    sheet.write(0, 1, u'温度')
+    sheet.write(0, 2, u'时间')
+
+    # 写入数据
+    data_row = 1
+
+    for i in datas:
+        # 格式化datetime
+        time = i.time.strftime("%Y-%m-%d %H:%M:%S")
+        sheet.write(data_row, 0, i.voltage)
+        sheet.write(data_row, 1, i.temperature)
+        sheet.write(data_row, 2, time)
+        data_row = data_row + 1
+
+    # 写出到IO
+    output = BytesIO()
+    wb.save(output)
+    wb.save(filename)
+    # 重新定位到开始
+    output.seek(0)
+    # 设置HTTPResponse的类型
+    # response = HttpResponse(content_type='application/vnd.ms-excel')
+    # response['charset'] = 'utf-8'
+    # # response.write(codecs.BOM_UTF8)
+    # response['Content-Disposition'] = 'attachment;filename=' + filename
+    # response.write(output.getvalue())
+    with open(filename, 'rb') as model_excel:
+        result = model_excel.read()
+    response = HttpResponse(result)
+    response['Content-Disposition'] = 'attachment;filename=' + filename
+    return response
