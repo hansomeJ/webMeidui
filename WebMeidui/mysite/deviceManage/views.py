@@ -68,6 +68,24 @@ def datas(request):
 
 @require_POST
 @csrf_exempt
+def start(request):
+    id = request.POST.get('ids')
+    device = equipment.objects.get(pk=id)
+    equipmentattr = equipmentAttr.objects.all()[0]
+    com = equipmentattr.equipment_com
+    rate = equipmentattr.equipment_rate
+    equipment_id = device.equipment_id
+    print(equipment_id)
+    # 0x8A,0x05,0x17,0x11,0x11
+    mylist = equipment_id.split(',')
+    myequipment = Data(com, rate, mylist)
+    myequipment.start()
+    result = {'Success': 'ok'}
+    return JsonResponse(result)
+
+
+@require_POST
+@csrf_exempt
 def set(request):
     com = request.POST.get('com', None)
     rate = request.POST.get('rate', None)

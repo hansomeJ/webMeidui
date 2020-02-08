@@ -87,12 +87,15 @@
         </div>
 
         <form class="form-inline my-2 my-lg-0 ml-5">
-            <fieldset disabled>
-                <button class="btn btn-secondary active my-2 my-sm-0">当前串口</button>
-                <input class="form-control mr-sm-2" type="text" value="{{ eq.equipment_com }}" id="com">
-                <button class="btn btn-secondary active my-2 my-sm-0">当前波特率</button>
-                <input class="form-control mr-sm-2" type="text" value="{{ eq.equipment_rate }}" id="rate">
-            </fieldset>
+            <div class="form-row">
+                <fieldset disabled>
+                    <button class="btn btn-secondary active my-2 my-sm-0">当前串口</button>
+                    <input class="form-control mr-sm-2 col-md-2" type="text" value="{{ eq.equipment_com }}" id="com">
+                    <button class="btn btn-secondary active my-2 my-sm-0">当前波特率</button>
+                    <input class="form-control mr-sm-2 col-md-2" type="text" value="{{ eq.equipment_rate }}" id="rate">
+                </fieldset>
+            </div>
+
         </form>
     </div>
 </nav>
@@ -177,6 +180,25 @@
             })
         })
     }, 5000);
+    window.setInterval(function () {
+        $(function () {
+            let $devices = $(".device");
+            $devices.each(function () {
+                $ids = $(this).attr('id');
+                // console.log($ids);
+                $.ajax({
+                    url: '{% url "deviceManage:start"  %}',
+                    data: {'ids': $ids},
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+
+                    }
+                })
+
+            })
+        })
+    }, 65000);
     $(function () {
         let $com = $(".com");
         $com.on('click', function () {

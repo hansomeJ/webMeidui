@@ -80,4 +80,6 @@ class Data():
 # mydata.start()
 # print('开始')
 
-
+s='0x8A,0x05,0x17,0x11,0x11'
+m=s.split(',')
+print(m)
