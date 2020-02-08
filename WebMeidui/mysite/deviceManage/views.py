@@ -6,11 +6,13 @@ import threading
 from mysite.connect import Data
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods, require_safe
-from django.http import JsonResponse, HttpResponse,StreamingHttpResponse
+from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
 from django.core.paginator import Paginator
+from mysite.settings import STATICFILES_DIRS
 import xlwt
-from io import BytesIO,StringIO
-import codecs
+from io import BytesIO, StringIO
+import codecs, os
+
 
 # device1 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
 # device2 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
@@ -111,7 +113,7 @@ def export_excel(request):
     datas = data.objects.filter(equipment_id=device)
     filename = device.name + '.xls'
     # 创建一个文件对象
-    wb = xlwt.Workbook(encoding='utf8')
+    wb = xlwt.Workbook(encoding='gbk')
     # 创建一个sheet对象
     sheet = wb.add_sheet(u"第一页")
     # 写入文件标题
@@ -133,17 +135,8 @@ def export_excel(request):
     # 写出到IO
     output = BytesIO()
     wb.save(output)
-    wb.save(filename)
+    file = 'static/dataFile/' + filename
+    wb.save(file)
     # 重新定位到开始
     output.seek(0)
-    # 设置HTTPResponse的类型
-    # response = HttpResponse(content_type='application/vnd.ms-excel')
-    # response['charset'] = 'utf-8'
-    # # response.write(codecs.BOM_UTF8)
-    # response['Content-Disposition'] = 'attachment;filename=' + filename
-    # response.write(output.getvalue())
-    with open(filename, 'rb') as model_excel:
-        result = model_excel.read()
-    response = HttpResponse(result)
-    response['Content-Disposition'] = 'attachment;filename=' + filename
-    return response
+    return JsonResponse({'file': file})

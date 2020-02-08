@@ -228,46 +228,17 @@
                 data: {'id': $id},
                 type: 'POST',
                 success: function (data) {
-                    // console.log('123');
-                    // return data
-                    const blob = new Blob([data]);
-                    const blobUrl = window.URL.createObjectURL(blob);
+                    let $url=data.file;
                     const a = document.createElement('a');
+                    a.href='/'+$url;
                     a.style.display = 'none';
                     a.download = $FileName + '.xls';
-                    a.href = blobUrl;
+                    console.log(a);
                     a.click();
-                    // document.body.removeChild(a);
                 }
             })
 
         })
     });
-
-    function request() {
-        const req = new XMLHttpRequest();
-        req.open('POST', '{% url "deviceManage:export_excel" %}', true);
-        req.responseType = 'blob';
-        req.setRequestHeader('Content-Type', 'application/json');
-        req.onload = function () {
-            const data = req.response;
-            const a = document.createElement('a');
-            const blob = new Blob([data]);
-            const blobUrl = window.URL.createObjectURL(blob);
-            download(blobUrl);
-        };
-        req.send('<id:' + $("#export").val() + '>');
-    }
-
-    function download(blobUrl) {
-        const a = document.createElement('a');
-        a.style.display = 'none';
-        a.download = '<文件名>';
-        a.href = blobUrl;
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    // request();
 </script>
 </html>
