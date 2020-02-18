@@ -51,13 +51,13 @@ class Data():
         self.port = port
         self.rate = rate
         self.deviceID = deviceID
-        self.serial = self.serial()
+        self.myserial = self.myserial()
         # 发送线程
-        self.sen = self.sen(send, 'sen', self.serial, (self.deviceID,))
+        self.sen = self.sen(send, 'sen', self.myserial, (self.deviceID,))
         # 接收数据线程
-        self.rec = self.rec(recv, 'rec', self.serial, )
+        self.rec = self.rec(recv, 'rec', self.myserial, )
 
-    def serial(self):
+    def myserial(self):
         s = serial.Serial(self.port, self.rate)
         return s
 
