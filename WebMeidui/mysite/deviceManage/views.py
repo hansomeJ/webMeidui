@@ -22,39 +22,48 @@ from datetime import timedelta
 # device2.start()
 
 # Create your views here.
-
+'''
+分页功能
+'''
 def my_page(data, pagenum):
+    #设置每页显示数据的条数
     paginator = Paginator(object_list=data, per_page=4)
     # 生成一个page对象
     page = paginator.page(pagenum)
     return page
 
+'''
 
+'''
 def index(request):
-    device = equipment.objects.all()
-    eq = equipmentAttr.objects.all()[0]
+    device = equipment.objects.all()#从数据库中获取所有的设备信息
+    eq = equipmentAttr.objects.all()[0]#从数据库中获取设备属性第一条数据
+
     if request.method == 'GET':
         return render(request, 'deviceManage/index.html', {'device': device, 'eq': eq})
         # C08A031A17FC,25.06C,3.296V
     else:
         deviceList = []
-        for i in request.POST.values():
+        for i in request.POST.values():#获取前端提交的设备号
             try:
                 int(i)
-                dec = equipment.objects.get(pk=i)
+                dec = equipment.objects.get(pk=i)#根据设备编号获取设备对象
+                # print(dec.name)
                 deviceList.append(dec)
 
             except:
                 pass
         return render(request, 'deviceManage/index.html', {'device': device, 'devices': deviceList, 'eq': eq})
 
-
+'''
+通过JS定时向后端请求数据
+'''
 @require_POST
 @csrf_exempt
 def datas(request):
-    id = request.POST.get('ids')
-    device = equipment.objects.get(pk=id)
-    equipmentData = data.objects.filter(equipment_id=device)
+    id = request.POST.get('ids')#从前端获取设备id
+    device = equipment.objects.get(pk=id)#通过设备id查询设备信息
+    equipmentData = data.objects.filter(equipment_id=device)#通过设备id从数据表中筛选数据
     dataTime = equipmentData[0].time.astimezone(timezone(timedelta(hours=+8))).strftime("%Y-%m-%d %H:%M:%S")
     voltage = equipmentData[0].voltage
     temperature = equipmentData[0].temperature
@@ -70,7 +79,9 @@ def datas(request):
               'status': status}
     return JsonResponse(result)
 
-
+'''
+唤醒硬件
+'''
 @require_POST
 @csrf_exempt
 def start(request):
@@ -88,7 +99,9 @@ def start(request):
     result = {'Success': 'ok'}
     return JsonResponse(result)
 
-
+'''
+设置串口和波特率
+'''
 @require_POST
 @csrf_exempt
 def set(request):
@@ -113,14 +126,16 @@ def set(request):
             print(e)
             return JsonResponse({'Error': 'setting com error!'})
 
-
+'''
+查看历史数据
+'''
 def historyData(request, id):
-    pagenum = request.GET.get('page', None)
-    device = equipment.objects.get(pk=id)
+    pagenum = request.GET.get('page', None)#从前端获取要查看的页码
+    device = equipment.objects.get(pk=id)#获取设备对象
     # 如果当前页数为None 则pagenum的值为1
     pagenum = 1 if pagenum == None else pagenum
 
-    # 如果年份和月份都不为空的话就按照获取的年份与月份来查询文章
+    # 根据设备筛选历史数据
     datas = data.objects.filter(equipment_id=device)
 
     page = my_page(datas, pagenum)
