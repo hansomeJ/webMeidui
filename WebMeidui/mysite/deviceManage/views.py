@@ -12,7 +12,8 @@ from mysite.settings import STATICFILES_DIRS
 import xlwt
 from io import BytesIO, StringIO
 import codecs, os
-
+from datetime import timezone
+from datetime import timedelta
 
 # device1 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
 # device2 = Data('COM4', 9600, [0X8A, 0X01, 0X17, 0X11])
@@ -21,6 +22,7 @@ import codecs, os
 # device2.start()
 
 # Create your views here.
+
 def my_page(data, pagenum):
     paginator = Paginator(object_list=data, per_page=4)
     # 生成一个page对象
@@ -53,15 +55,18 @@ def datas(request):
     id = request.POST.get('ids')
     device = equipment.objects.get(pk=id)
     equipmentData = data.objects.filter(equipment_id=device)
-    dataTime = equipmentData[0].time.strftime("%Y-%m-%d %H:%M:%S")
+    dataTime = equipmentData[0].time.astimezone(timezone(timedelta(hours=+8))).strftime("%Y-%m-%d %H:%M:%S")
     voltage = equipmentData[0].voltage
     temperature = equipmentData[0].temperature
+    temperature_status = equipmentData[0].temperature_status
+    voltage_status = equipmentData[0].voltage_status
     status = device.status
     if status == '0':
         status = '正常'
     else:
         status = '异常'
-    result = {'deviceId': id, 'dataTime': dataTime, 'voltage': voltage, 'temperature': temperature, 'Success': 'ok',
+    result = {'deviceId': id, 'dataTime': dataTime, 'voltage': voltage, 'temperature': temperature,
+              'temperature_status': temperature_status, 'voltage_status': voltage_status, 'Success': 'ok',
               'status': status}
     return JsonResponse(result)
 

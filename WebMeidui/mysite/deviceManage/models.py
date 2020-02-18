@@ -1,5 +1,6 @@
 from django.db import models
 import time
+import re
 
 
 # Create your models here.
@@ -38,11 +39,35 @@ class equipmentAttr(models.Model):
 
 # 创建返回设备表
 class data(models.Model):
+    STATUS_TEMPERATURE = (
+        ('0', '正常'),
+        ('1', '超温'),
+    )
+    STATUS_VOLTAGE = (
+        ('0', '正常'),
+        ('1', '电压低'),
+    )
     id = models.AutoField(primary_key=True, verbose_name='返回信息主键')
     equipment_id = models.ForeignKey(to=equipment, to_field='id', on_delete=models.CASCADE, verbose_name="设备号")
     time = models.DateTimeField(auto_now_add=True, verbose_name='数据返回时间')
     voltage = models.CharField(max_length=20, verbose_name='设备电压')
     temperature = models.CharField(max_length=20, verbose_name='温度')
+    temperature_status = models.CharField(choices=STATUS_TEMPERATURE, default='0', max_length=2, verbose_name='温度状态')
+    voltage_status = models.CharField(choices=STATUS_VOLTAGE, default='0', max_length=2, verbose_name='电压状态')
+
+    def save(self, *args, **kwargs):
+        myvoltage = re.findall('\d+', self.voltage)[0]
+        mytemperature = re.findall('\d+', self.temperature)[0]
+        print(myvoltage,mytemperature)
+        if mytemperature >= '50':
+            self.temperature_status = '1'
+        else:
+            self.temperature_status = '0'
+        if myvoltage < '3':
+            self.voltage_status = '1'
+        else:
+            self.voltage_status = '0'
+        super(data, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = '数据'

@@ -5,7 +5,7 @@ from .models import data, equipment,equipmentAttr
 
 
 class dataAdmin(admin.ModelAdmin):
-    list_display = ['id', 'equipment_id', 'time', 'voltage', 'temperature']
+    list_display = ['id', 'equipment_id', 'time', 'voltage', 'temperature','temperature_status','voltage_status']
 
 
 admin.site.register(data, dataAdmin)

@@ -173,6 +173,16 @@
                             $('#' + data.deviceId + ' ' + '.voltage').attr("value", data.voltage);
                             $('#' + data.deviceId + ' ' + '.temperature').attr("value", data.temperature);
                             $('#' + data.deviceId + ' ' + '.status').attr("value", data.status);
+                            if (data.temperature_status === '0'){
+                                    $('#' + data.deviceId + ' ' + '.temperature').removeClass('text-danger').addClass('text-primary');
+                            }else {
+                                $('#' + data.deviceId + ' ' + '.temperature').removeClass('text-primary').addClass('text-danger');
+                            }
+                            if (data.voltage_status === '0'){
+                                    $('#' + data.deviceId + ' ' + '.voltage').removeClass('text-danger').addClass('text-primary');
+                            }else {
+                                $('#' + data.deviceId + ' ' + '.voltage').removeClass('text-primary').addClass('text-danger');
+                            }
                         }
                     }
                 })
