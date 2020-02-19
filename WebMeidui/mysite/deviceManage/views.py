@@ -158,6 +158,8 @@ def export_excel(request):
     sheet.write(0, 0, u'电压')
     sheet.write(0, 1, u'温度')
     sheet.write(0, 2, u'时间')
+    sheet.write(0, 3, u'电压状态')
+    sheet.write(0, 4, u'温度状态')
 
     # 写入数据
     data_row = 1
@@ -167,7 +169,9 @@ def export_excel(request):
         time = i.time.strftime("%Y-%m-%d %H:%M:%S")
         sheet.write(data_row, 0, i.voltage)
         sheet.write(data_row, 1, i.temperature)
-        sheet.write(data_row, 2, time)
+        sheet.write(data_row, 2, i.temperature_status)
+        sheet.write(data_row, 3, i.voltage_status)
+        sheet.write(data_row, 4, time)
         data_row = data_row + 1
 
     # 写出到IO

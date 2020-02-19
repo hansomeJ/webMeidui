@@ -30,6 +30,8 @@
                         <th scope="col">电压</th>
                         <th scope="col">温度</th>
                         <th scope="col">时间</th>
+                        <th scope="col">温度状态</th>
+                        <th scope="col">时间状态</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -40,6 +42,8 @@
                         <td>{{data.voltage}}</td>
                         <td>{{data.temperature}}</td>
                         <td>{{data.time}}</td>
+                        <td>{{data.temperature_status}}</td>
+                        <td>{{data.voltage_status}}</td>
                     </tr>
                     {% empty %}
                     <tr>
