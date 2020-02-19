@@ -37,6 +37,19 @@ class equipmentAttr(models.Model):
         return str(self.id)
 
 
+class warning(models.Model):
+    id = models.AutoField(primary_key=True, verbose_name='属性主键')
+    temperatureWarning = models.CharField(max_length=20, default='50', verbose_name='温度线', )
+    voltageWarning = models.CharField(max_length=20, default='3', verbose_name='电压线', )
+
+    class Meta:
+        verbose_name = '报警线'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return str(self.id)
+
+
 # 创建返回设备表
 class data(models.Model):
     STATUS_TEMPERATURE = (
@@ -57,13 +70,16 @@ class data(models.Model):
 
     def save(self, *args, **kwargs):
         myvoltage = re.findall('\d+', self.voltage)[0]
-        mytemperature = re.findall('\d+', self.temperature)[0]
-        print(myvoltage,mytemperature)
-        if mytemperature >= '50':
+        s = re.findall('\d+', self.temperature)
+        mytemperature = s[0] + '.' + s[1]
+        temperatureWarning = warning.objects.all()[0].temperatureWarning
+        voltageWarning = warning.objects.all()[0].voltageWarning
+        print(myvoltage, mytemperature)
+        if mytemperature >= temperatureWarning:
             self.temperature_status = '1'
         else:
             self.temperature_status = '0'
-        if myvoltage < '3':
+        if myvoltage < voltageWarning:
             self.voltage_status = '1'
         else:
             self.voltage_status = '0'

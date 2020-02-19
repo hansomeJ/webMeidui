@@ -1,9 +1,7 @@
 import time
+import re
 
-t1 = time.time()
-t2 = time.time()
-while t2 - t1 <= 10:
-    print('running')
-    t2 = time.time()
-print('end')
 # print(t1)
+s=re.findall('\d+', '3.15V')
+m=s[0]+'.'+s[1]
+print(m>'2')
