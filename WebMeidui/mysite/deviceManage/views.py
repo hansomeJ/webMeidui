@@ -1,8 +1,16 @@
 from django.shortcuts import render
-from .models import equipment, data, equipmentAttr
+from .models import equipment, data, equipmentAttr,warning
 import serial
+import math
 import time
 import threading
+import pyecharts
+from pyecharts.charts import Line
+import pyecharts.options as opts
+from pyecharts.faker import Faker
+from django.template import loader
+from pyecharts.charts import Line3D
+# from pyecharts.constants import DEFAULT_HOST
 from mysite.connect import Data
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods, require_safe
@@ -38,9 +46,9 @@ def my_page(data, pagenum):
 def index(request):
     device = equipment.objects.all()#从数据库中获取所有的设备信息
     eq = equipmentAttr.objects.all()[0]#从数据库中获取设备属性第一条数据
-
+    war =warning.objects.all()[0]
     if request.method == 'GET':
-        return render(request, 'deviceManage/index.html', {'device': device, 'eq': eq})
+        return render(request, 'deviceManage/index.html', {'device': device, 'eq': eq,'war':war})
         # C08A031A17FC,25.06C,3.296V
     else:
         deviceList = []
@@ -53,7 +61,7 @@ def index(request):
 
             except:
                 pass
-        return render(request, 'deviceManage/index.html', {'device': device, 'devices': deviceList, 'eq': eq})
+        return render(request, 'deviceManage/index.html', {'device': device, 'devices': deviceList, 'eq': eq,'war':war})
 
 '''
 通过JS定时向后端请求数据
@@ -161,17 +169,27 @@ def export_excel(request):
     sheet.write(0, 3, u'电压状态')
     sheet.write(0, 4, u'温度状态')
 
+
     # 写入数据
     data_row = 1
 
     for i in datas:
         # 格式化datetime
         time = i.time.strftime("%Y-%m-%d %H:%M:%S")
+        if i.temperature_status == '0':
+            temperature='正常'
+        else:
+            temperature = '超温'
+        if i.voltage_status == '0':
+            voltage = "正常"
+        else:
+            voltage = "电压低"
         sheet.write(data_row, 0, i.voltage)
         sheet.write(data_row, 1, i.temperature)
-        sheet.write(data_row, 2, i.temperature_status)
-        sheet.write(data_row, 3, i.voltage_status)
-        sheet.write(data_row, 4, time)
+        sheet.write(data_row, 2, time)
+        sheet.write(data_row, 3, voltage)
+        sheet.write(data_row, 4, temperature)
+
         data_row = data_row + 1
 
     # 写出到IO
@@ -181,4 +199,51 @@ def export_excel(request):
     wb.save(file)
     # 重新定位到开始
     output.seek(0)
-    return JsonResponse({'file': file})
+    return JsonResponse({'file': file,'filename':filename})
+
+# 数据可视化
+
+def data_visual(request):
+    template = loader.get_template('deviceManage/Echarts.html')
+    l3d = line3d()
+    context = dict(
+        myechart=l3d.render_embed(),
+        host=443,
+        script_list=l3d.get_js_dependencies()
+    )
+    return HttpResponse(template.render(context, request))
+
+
+def line3d():
+    _data = []
+    for t in range(0, 25000):
+        _t = t / 1000
+        x = (1 + 0.25 * math.cos(75 * _t)) * math.cos(_t)
+        y = (1 + 0.25 * math.cos(75 * _t)) * math.sin(_t)
+        z = _t + 2.0 * math.sin(75 * _t)
+        _data.append([x, y, z])
+    range_color = [
+        '#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf',
+        '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
+    line3d = Line3D("3D line plot demo")
+    line3d.add("", _data, is_visualmap=True,
+               visual_range_color=range_color, visual_range=[0, 30],
+               is_grid3D_rotate=True, grid3D_rotate_speed=180)
+    return line3d
+
+@require_POST
+@csrf_exempt
+def warningSet(request):
+    temperatureWarning = request.POST.get('temperatureWarning',None)
+    voltageWarning = request.POST.get('voltageWarning',None)
+    print(temperatureWarning,voltageWarning)
+    if temperatureWarning and voltageWarning is not None:
+        war = warning.objects.all()[0]
+        war.temperatureWarning=temperatureWarning
+        war.voltageWarning=voltageWarning
+        war.save()
+        datas = data.objects.all()
+        for i in datas:
+            i.save()
+        return JsonResponse({'Success': 'ok'})
+    return JsonResponse({'Success': 'error'})

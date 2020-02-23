@@ -69,11 +69,10 @@ class data(models.Model):
     voltage_status = models.CharField(choices=STATUS_VOLTAGE, default='0', max_length=2, verbose_name='电压状态')
 
     def save(self, *args, **kwargs):
-        myvoltage = re.findall('\d+', self.voltage)[0]
-        s = re.findall('\d+', self.temperature)
-        mytemperature = s[0] + '.' + s[1]
-        temperatureWarning = warning.objects.all()[0].temperatureWarning
-        voltageWarning = warning.objects.all()[0].voltageWarning
+        myvoltage = float(re.findall('[0-9.]+', self.voltage)[0])
+        mytemperature = float(re.findall('[0-9.]+', self.temperature)[0])
+        temperatureWarning = float(re.findall('[0-9.]+',warning.objects.all()[0].temperatureWarning)[0])
+        voltageWarning = float(re.findall('[0-9.]+',warning.objects.all()[0].voltageWarning)[0])
         print(myvoltage, mytemperature)
         if mytemperature >= temperatureWarning:
             self.temperature_status = '1'

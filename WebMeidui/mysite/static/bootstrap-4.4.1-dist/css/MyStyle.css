@@ -1,0 +1,4 @@
+.mybg {
+    background: url('/static/image/bgImg.jpg');
+    background-size: contain;
+}
