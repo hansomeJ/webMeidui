@@ -2,3 +2,7 @@
     background: url('/static/image/bgImg.jpg');
     background-size: contain;
 }
+.mybg1 {
+    background: url('/static/image/myBg.gif') no-repeat center;
+    background-size: contain;
+}
