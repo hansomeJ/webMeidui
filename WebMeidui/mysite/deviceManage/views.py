@@ -4,13 +4,6 @@ import serial
 import math
 import time
 import threading
-import pyecharts
-from pyecharts.charts import Line
-import pyecharts.options as opts
-from pyecharts.faker import Faker
-from django.template import loader
-from pyecharts.charts import Line3D
-# from pyecharts.constants import DEFAULT_HOST
 from mysite.connect import Data
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST, require_http_methods, require_safe
@@ -201,35 +194,6 @@ def export_excel(request):
     output.seek(0)
     return JsonResponse({'file': file,'filename':filename})
 
-# 数据可视化
-
-def data_visual(request):
-    template = loader.get_template('deviceManage/Echarts.html')
-    l3d = line3d()
-    context = dict(
-        myechart=l3d.render_embed(),
-        host=443,
-        script_list=l3d.get_js_dependencies()
-    )
-    return HttpResponse(template.render(context, request))
-
-
-def line3d():
-    _data = []
-    for t in range(0, 25000):
-        _t = t / 1000
-        x = (1 + 0.25 * math.cos(75 * _t)) * math.cos(_t)
-        y = (1 + 0.25 * math.cos(75 * _t)) * math.sin(_t)
-        z = _t + 2.0 * math.sin(75 * _t)
-        _data.append([x, y, z])
-    range_color = [
-        '#313695', '#4575b4', '#74add1', '#abd9e9', '#e0f3f8', '#ffffbf',
-        '#fee090', '#fdae61', '#f46d43', '#d73027', '#a50026']
-    line3d = Line3D("3D line plot demo")
-    line3d.add("", _data, is_visualmap=True,
-               visual_range_color=range_color, visual_range=[0, 30],
-               is_grid3D_rotate=True, grid3D_rotate_speed=180)
-    return line3d
 
 @require_POST
 @csrf_exempt
