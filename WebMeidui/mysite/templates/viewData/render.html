@@ -7,11 +7,11 @@
 
 </head>
 <body>
-    <div id="8ac227a52c5a42b6af8877c62a24df33" class="chart-container" style="width:900px; height:500px;"></div>
+    <div id="f739a4b9dc804fff8225b35e7e07bf42" class="chart-container" style="width:900px; height:500px;"></div>
     <script>
-        var chart_8ac227a52c5a42b6af8877c62a24df33 = echarts.init(
-            document.getElementById('8ac227a52c5a42b6af8877c62a24df33'), 'white', {renderer: 'canvas'});
-        var option_8ac227a52c5a42b6af8877c62a24df33 = {
+        var chart_f739a4b9dc804fff8225b35e7e07bf42 = echarts.init(
+            document.getElementById('f739a4b9dc804fff8225b35e7e07bf42'), 'white', {renderer: 'canvas'});
+        var option_f739a4b9dc804fff8225b35e7e07bf42 = {
     "backgroundColor": new echarts.graphic.LinearGradient(0, 0, 0, 1, [{offset: 0, color: '#c86589'}, {offset: 1, color: '#06a7ff'}], false),
     "animation": true,
     "animationThreshold": 2000,
@@ -50,7 +50,7 @@
     "series": [
         {
             "type": "line",
-            "name": "\u6e29\u5ea6",
+            "name": "\u6e29\u5ea6(\u5355\u4f4d\uff1a\u6444\u6c0f\u5ea6)",
             "connectNulls": false,
             "symbol": "circle",
             "symbolSize": 6,
@@ -59,36 +59,32 @@
             "step": false,
             "data": [
                 [
-                    "2020-02-03 09:52:02",
-                    25.17
-                ],
-                [
-                    "2020-02-03 09:52:20",
-                    25.17
-                ],
-                [
-                    "2020-02-18 14:37:24",
-                    55.17
-                ],
-                [
-                    "2020-02-18 14:44:36",
-                    55.17
-                ],
-                [
-                    "2020-02-18 14:57:59",
-                    25.17
-                ],
-                [
-                    "2020-02-18 14:59:56",
-                    55.17
-                ],
-                [
-                    "2020-02-18 15:02:35",
+                    "2020-02-28 08:29:38",
                     5.17
                 ],
                 [
-                    "2020-02-19 14:15:43",
-                    5.17
+                    "2020-02-28 08:30:11",
+                    10.03
+                ],
+                [
+                    "2020-02-28 08:30:38",
+                    20.17
+                ],
+                [
+                    "2020-02-28 08:30:59",
+                    25.17
+                ],
+                [
+                    "2020-02-28 08:31:33",
+                    35.17
+                ],
+                [
+                    "2020-02-28 08:31:54",
+                    40.17
+                ],
+                [
+                    "2020-02-28 08:32:07",
+                    50.17
                 ]
             ],
             "hoverAnimation": true,
@@ -119,12 +115,13 @@
                 },
                 "data": [
                     {
-                        "type": "average"
+                        "name": "\u6e29\u5ea6\u8b66\u544a\u7ebf",
+                        "yAxis": "31"
                     }
                 ]
             },
             "tooltip": {
-                "show": false,
+                "show": true,
                 "trigger": "item",
                 "triggerOn": "mousemove|click",
                 "axisPointer": {
@@ -145,45 +142,42 @@
         },
         {
             "type": "line",
-            "name": "\u7535\u538b",
+            "name": "\u7535\u538b\uff08\u5355\u4f4d\uff1a\u4f0f\u7279\uff09",
             "connectNulls": false,
-            "symbol": "circle",
+            "yAxisIndex": 1,
+            "symbol": "rect",
             "symbolSize": 6,
             "showSymbol": true,
             "smooth": true,
             "step": false,
             "data": [
                 [
-                    "2020-02-03 09:52:02",
+                    "2020-02-28 08:29:38",
                     3.312
                 ],
                 [
-                    "2020-02-03 09:52:20",
-                    3.314
-                ],
-                [
-                    "2020-02-18 14:37:24",
+                    "2020-02-28 08:30:11",
                     4.312
                 ],
                 [
-                    "2020-02-18 14:44:36",
-                    4.312
-                ],
-                [
-                    "2020-02-18 14:57:59",
+                    "2020-02-28 08:30:38",
                     1.312
                 ],
                 [
-                    "2020-02-18 14:59:56",
+                    "2020-02-28 08:30:59",
+                    2.4
+                ],
+                [
+                    "2020-02-28 08:31:33",
+                    3.312
+                ],
+                [
+                    "2020-02-28 08:31:54",
                     3.314
                 ],
                 [
-                    "2020-02-18 15:02:35",
-                    1.312
-                ],
-                [
-                    "2020-02-19 14:15:43",
-                    1.312
+                    "2020-02-28 08:32:07",
+                    3.312
                 ]
             ],
             "hoverAnimation": true,
@@ -214,12 +208,13 @@
                 },
                 "data": [
                     {
-                        "type": "average"
+                        "name": "\u7535\u538b\u8b66\u544a\u7ebf",
+                        "yAxis": "2.9"
                     }
                 ]
             },
             "tooltip": {
-                "show": false,
+                "show": true,
                 "trigger": "item",
                 "triggerOn": "mousemove|click",
                 "axisPointer": {
@@ -242,18 +237,24 @@
     "legend": [
         {
             "data": [
-                "\u6e29\u5ea6",
-                "\u7535\u538b"
+                "\u6e29\u5ea6(\u5355\u4f4d\uff1a\u6444\u6c0f\u5ea6)",
+                "\u7535\u538b\uff08\u5355\u4f4d\uff1a\u4f0f\u7279\uff09"
             ],
             "selected": {
-                "\u6e29\u5ea6": true,
-                "\u7535\u538b": true
+                "\u6e29\u5ea6(\u5355\u4f4d\uff1a\u6444\u6c0f\u5ea6)": true,
+                "\u7535\u538b\uff08\u5355\u4f4d\uff1a\u4f0f\u7279\uff09": true
             },
-            "show": false,
+            "show": true,
+            "right": "center",
+            "top": "5%",
             "padding": 5,
             "itemGap": 10,
             "itemWidth": 25,
-            "itemHeight": 14
+            "itemHeight": 14,
+            "textStyle": {
+                "color": "#fff",
+                "fontSize": 16
+            }
         }
     ],
     "tooltip": {
@@ -270,16 +271,28 @@
     },
     "xAxis": [
         {
-            "type": "category",
+            "type": "time",
+            "name": "\u65f6\u95f4",
             "show": true,
             "scale": false,
             "nameLocation": "end",
             "nameGap": 15,
+            "nameTextStyle": {
+                "color": "#fff",
+                "fontSize": 16
+            },
             "gridIndex": 0,
             "axisLine": {
-                "show": false,
+                "show": true,
                 "onZero": true,
-                "onZeroAxisIndex": 0
+                "onZeroAxisIndex": 0,
+                "lineStyle": {
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid",
+                    "color": "ffffff1f"
+                }
             },
             "axisTick": {
                 "show": true,
@@ -316,14 +329,13 @@
                 }
             },
             "data": [
-                "2020-02-03 09:52:02",
-                "2020-02-03 09:52:20",
-                "2020-02-18 14:37:24",
-                "2020-02-18 14:44:36",
-                "2020-02-18 14:57:59",
-                "2020-02-18 14:59:56",
-                "2020-02-18 15:02:35",
-                "2020-02-19 14:15:43"
+                "2020-02-28 08:29:38",
+                "2020-02-28 08:30:11",
+                "2020-02-28 08:30:38",
+                "2020-02-28 08:30:59",
+                "2020-02-28 08:31:33",
+                "2020-02-28 08:31:54",
+                "2020-02-28 08:32:07"
             ]
         }
     ],
@@ -364,7 +376,8 @@
                 "show": true,
                 "position": "top",
                 "color": "#ffffff63",
-                "margin": 20
+                "margin": 20,
+                "formatter": "{value} \u00b0C"
             },
             "inverse": false,
             "offset": 0,
@@ -417,7 +430,8 @@
                 "show": true,
                 "position": "top",
                 "color": "#ffffff63",
-                "margin": 20
+                "margin": 20,
+                "formatter": "{value} V"
             },
             "inverse": false,
             "position": "right",
@@ -438,9 +452,9 @@
     ],
     "title": [
         {
-            "text": "\u8bbe\u59072-\u6e29\u5ea6\u53d8\u5316\uff08\u5355\u4f4d\uff1a\u6444\u6c0f\u5ea6\uff09\u7535\u538b\u53d8\u5316\uff08\u5355\u4f4d\uff1a\u4f0f\u7279\uff09",
-            "left": "center",
-            "bottom": "5%",
+            "text": "\u8bbe\u59071-\u6570\u636e\u53ef\u89c6\u5316",
+            "left": "10%",
+            "top": "1%",
             "padding": 5,
             "itemGap": 10,
             "textStyle": {
@@ -450,7 +464,7 @@
         }
     ]
 };
-        chart_8ac227a52c5a42b6af8877c62a24df33.setOption(option_8ac227a52c5a42b6af8877c62a24df33);
+        chart_f739a4b9dc804fff8225b35e7e07bf42.setOption(option_f739a4b9dc804fff8225b35e7e07bf42);
     </script>
 </body>
 </html>
