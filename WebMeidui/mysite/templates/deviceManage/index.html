@@ -183,7 +183,7 @@
                class="card-link btn-outline-secondary">历史数据</a>
             <a href="{% url 'viewData:echarts' device.id %}" target="_blank"
                class="card-link btn-outline-secondary">可视化</a>
-            <a class="card-link btn-outline-primary export" value="{{device.id}}">导出数据</a>
+            <button class="card-link btn-outline-primary export" value="{{device.id}}">导出数据</button>
         </div>
     </div>
 
@@ -319,6 +319,7 @@
         let $button = $(".export");
         $button.on('click', function () {
             let $id = $(this).val();
+            console.log($id);
             $.ajax({
                 url: '{% url "deviceManage:export_excel" %}',
                 data: {'id': $id},
